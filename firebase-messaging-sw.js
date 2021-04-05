@@ -2,12 +2,13 @@ importScripts('https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js');
 
 var firebaseConfig = {
-    apiKey: "AIzaSyBbYfnk43W1ARo63PJ-RsgSVS4mOg1tpts",
-    authDomain: "notification101-16eac.firebaseapp.com",
-    projectId: "notification101-16eac",
-    storageBucket: "notification101-16eac.appspot.com",
-    messagingSenderId: "1059761156598",
-    appId: "1:1059761156598:web:120a815b94326900f157d7"
+    apiKey: "AIzaSyDZ3C-BL40g6Rg9XI1QjNwntdznwzXvIHE",
+    authDomain: "rotor-stg.firebaseapp.com",
+    projectId: "rotor-stg",
+    storageBucket: "rotor-stg.appspot.com",
+    messagingSenderId: "1025993237669",
+    appId: "1:1025993237669:web:14c4234686645e4513994c",
+    measurementId: "G-P36E135C72"
 };
 
 firebase.initializeApp(firebaseConfig);
