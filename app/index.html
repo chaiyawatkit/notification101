@@ -1,58 +1,73 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Notification</h2>
 
-    <title>Hello, world!</title>
-  </head>
-  <body>
-    <div class="container">
-        <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-            <div class="card card-signin my-5">
-            <div class="card-body">
-                <h5 class="card-title text-center">Sign In</h5>
-                <form class="form-signin">
-                <div class="form-label-group">
-                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-                    <label for="inputEmail">Email address</label>
-                </div>
+<p id="token"></p>
+<script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js"></script>
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyDZ3C-BL40g6Rg9XI1QjNwntdznwzXvIHE",
+        authDomain: "rotor-stg.firebaseapp.com",
+        projectId: "rotor-stg",
+        storageBucket: "rotor-stg.appspot.com",
+        messagingSenderId: "1025993237669",
+        appId: "1:1025993237669:web:14c4234686645e4513994c",
+        measurementId: "G-P36E135C72"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const messaging=firebase.messaging();
 
-                <div class="form-label-group">
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                    <label for="inputPassword">Password</label>
-                </div>
+    function IntitalizeFireBaseMessaging() {
+        messaging
+            .requestPermission()
+            .then(function () {
+                console.log("Notification Permission");
+                return messaging.getToken();
+            })
+            .then(function (token) {
+                console.log("Token : "+token);
+                document.getElementById("token").innerHTML=token;
+            })
+            .catch(function (reason) {
+                console.log(reason);
+            });
+    }
 
-                <div class="custom-control custom-checkbox mb-3">
-                    <input type="checkbox" class="custom-control-input" id="customCheck1">
-                    <label class="custom-control-label" for="customCheck1">Remember password</label>
-                </div>
-                <button id="sign-in" class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
-                <hr class="my-4">
+    messaging.onMessage(function (payload) {
+            console.log(payload);
 
-                </form>
-                <div class="custom-control custom-checkbox mb-3">
-                    <label id ="errors"></label>
-                    <label id ="success"></label>
-                </div>
-            </div>
-            </div>
-        </div>
-        </div>
-    </div>
+        const notificationOption={
+            body:payload.notification.body,
+            icon:payload.notification.icon
+        };
 
+        if(Notification.permission==="granted"){
+            var notification=new Notification(payload.notification.title,notificationOption);
 
+            notification.onclick=function (ev) {
+                ev.preventDefault();
+                window.open(payload.notification.click_action,'_blank');
+                notification.close();
+            }
+        }
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-messaging.js"></script>
-    <script src="app.js"></script>
-  </body>
+    });
+    messaging.onTokenRefresh(function () {
+        messaging.getToken()
+            .then(function (newtoken) {
+                console.log("New Token : "+ newtoken);
+            })
+            .catch(function (reason) {
+                console.log(reason);
+            })
+    })
+    IntitalizeFireBaseMessaging();
+</script>
+</body>
 </html>
